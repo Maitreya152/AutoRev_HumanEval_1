@@ -67,7 +67,7 @@ def parse_review(review_text):
 
 # --- Display and Save Functions ---
 def display_rating_form(review_data, review_key_prefix):
-    """Displays a parsed review and an input for a single collective score."""
+    """Displays a parsed review and inputs for four collective scores."""
     with st.container(border=True):
         if review_data.get("Summary"):
             st.markdown("**Summary**")
@@ -81,7 +81,13 @@ def display_rating_form(review_data, review_key_prefix):
         
         st.markdown("---")
         st.markdown("**Overall Rating**")
-        st.number_input("Score", min_value=0.0, max_value=5.0, step=0.1, key=f"{review_key_prefix}_score", help="Enter the score for the review.")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.number_input("Reviewer Confidence", min_value=0.0, max_value=5.0, step=0.1, key=f"{review_key_prefix}_confidence")
+            st.number_input("Constructiveness", min_value=0.0, max_value=5.0, step=0.1, key=f"{review_key_prefix}_constructiveness")
+        with col2:
+            st.number_input("Review Thoroughness", min_value=0.0, max_value=5.0, step=0.1, key=f"{review_key_prefix}_thoroughness")
+            st.number_input("Helpfulness", min_value=0.0, max_value=5.0, step=0.1, key=f"{review_key_prefix}_helpfulness")
 
 
 def save_results(results_path, record):
@@ -95,9 +101,16 @@ def save_results(results_path, record):
     combined_df.to_csv(results_path, index=False)
 
 def check_if_all_rated(review_key_prefix):
-    """Validates that the score input has a non-zero value."""
-    if st.session_state[f"{review_key_prefix}_score"] == 0.0:
-        return False
+    """Validates that all four score inputs have non-zero values."""
+    score_keys = [
+        f"{review_key_prefix}_confidence",
+        f"{review_key_prefix}_thoroughness",
+        f"{review_key_prefix}_constructiveness",
+        f"{review_key_prefix}_helpfulness"
+    ]
+    for key in score_keys:
+        if st.session_state[key] == 0.0:
+            return False
     return True
 
 def get_user_progress(results_path, user):
@@ -174,7 +187,7 @@ if selected_user != "--- Select User ---":
 
         if submitted:
             if not check_if_all_rated(review_key_prefix):
-                st.error("Please enter a non-zero value for the Score.")
+                st.error("Please enter a non-zero value for all four scores.")
             else:
                 # Collect and save the single record
                 record = {
@@ -182,7 +195,10 @@ if selected_user != "--- Select User ---":
                     "user": selected_user,
                     "paper_id": paper_id,
                     "review_type": review_type,
-                    "score": st.session_state[f"{review_key_prefix}_score"]
+                    "reviewer_confidence": st.session_state[f"{review_key_prefix}_confidence"],
+                    "review_thoroughness": st.session_state[f"{review_key_prefix}_thoroughness"],
+                    "constructiveness": st.session_state[f"{review_key_prefix}_constructiveness"],
+                    "helpfulness": st.session_state[f"{review_key_prefix}_helpfulness"],
                 }
                 
                 save_results(RESULTS_CSV_PATH, record)

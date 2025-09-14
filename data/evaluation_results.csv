@@ -1,0 +1,4 @@
+timestamp,user,paper_id,review_type,reviewer_confidence,review_thoroughness,constructiveness,helpfulness
+2025-09-14T21:26:58.900301,maitreya,f7PmO5boQ9,5_3,0.3,0.1,0.2,0.1
+2025-09-14T21:27:25.264234,maitreya,OJoMzslBIa,5_5,0.3,0.1,0.1,0.1
+2025-09-14T21:27:47.131112,maitreya,wOb0xFwdpr,5_5,0.30000000000000004,0.7999999999999999,1.4000000000000001,0.9999999999999999
