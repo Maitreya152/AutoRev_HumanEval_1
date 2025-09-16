@@ -1,5 +1,7 @@
 # Human Evaluation Interface for AutoRev Task 1
 
+The guidelines for the task can be found in `./AutoRev_Task-1_Guidelines.pdf`
+
 ## Setup Instructions
 
 To set up and run the application locally, follow these steps:
